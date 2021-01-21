@@ -15,22 +15,24 @@ import tkinter.messagebox as tkmsg
 class SearchDocs():
     def __init__(self, master):
         self.parent = master
-
+        self.keyword = tk.StringVar()
+        self.Path = tk.StringVar()
+        self.Path.set('/')
         self.ADDRESS = tk.StringVar()
-        self.ADDRESS.set('192.168.43.234')        
+        self.ADDRESS.set('')        
         self.USER = tk.StringVar()
-        self.USER.set('pi')
+        self.USER.set('')
         self.PASSWD = tk.StringVar()
-        self.PASSWD.set('raspberry')
+        self.PASSWD.set('')
         self.SearchSceneMarkPanel = tk.LabelFrame(self.parent, text="Search Docs",font=('Courier', 10))
-        self.SearchSceneMarkPanel.pack(side=tk.LEFT, expand=tk.NO, fill = tk.X) 
+        self.SearchSceneMarkPanel.pack(side=tk.TOP, expand=tk.NO, fill = tk.BOTH) 
         self.init_ctrlPanel()
         self.init_DocSearch_tab()
         
 
     def init_ctrlPanel(self):
-        self.ctrlPanel = tk.LabelFrame(self.SearchSceneMarkPanel, text="Control Panel",font=('Courier', 10), width = 100)
-        self.ctrlPanel.pack(side=tk.TOP, expand=tk.NO, fill = tk.X)        
+        self.ctrlPanel = tk.LabelFrame(self.SearchSceneMarkPanel, text="Control Panel",font=('Courier', 10), width = 60)
+        self.ctrlPanel.pack(side=tk.TOP, expand=tk.YES, fill = tk.BOTH)        
         tk.Label(self.ctrlPanel, text='IP Address', font=('Courier', 10),width=10, height=2).grid(row = 0, column = 0, sticky = tk.E+tk.W)
         self.Address = tk.Entry(self.ctrlPanel, textvariable=self.ADDRESS,font=('Courier', 10), width = 15)
         self.Address.grid(row = 0, column = 1, sticky = tk.E+tk.W)
@@ -123,12 +125,8 @@ class SearchDocs():
         
     def init_DocSearch_tab(self):
         self.DocSearch_tab = tk.Frame(self.SearchSceneMarkPanel)
-        self.DocSearch_tab.pack(side = tk.LEFT, expand=tk.YES, fill=tk.BOTH)
-        #self.notebook.add(self.DocSearch_tab, text="Doc Search")
-
-        self.keyword = tk.StringVar()
-        self.Path = tk.StringVar()
-        self.Path.set('/home/pi')        
+        self.DocSearch_tab.pack(side = tk.TOP, expand=tk.YES, fill=tk.BOTH)
+        #self.notebook.add(self.DocSearch_tab, text="Doc Search")        
 
         self.Docs = tk.LabelFrame(self.DocSearch_tab, text="Documents",font=('Courier', 10), height = 10)
         self.Docs.pack(side=tk.TOP, expand=tk.YES, fill = tk.X)         
@@ -160,15 +158,15 @@ class SearchDocs():
         self.Table_of_Docs = ttk.Treeview(self.DocSearch_tab,columns = ["#1"],height = 10)
         self.Table_of_Docs.heading("#0", text = "Search of Documents")#icon column
         self.Table_of_Docs.heading("#1", text = "Path")
-        self.Table_of_Docs.column("#0", width = 180)#icon column
-        self.Table_of_Docs.column("#1", width = 400)
+        self.Table_of_Docs.column("#0", width = 320)#icon column
+        self.Table_of_Docs.column("#1", width = 820)
         self.Table_of_Docs.tag_configure('T', font = 'Courier,4')
         self.Table_of_Docs.bind("<Double-1>",self.Select_Docs)
         self.Table_of_Docs.pack(side=tk.TOP, expand=tk.NO)
 
         self.DocTextFrame = tk.LabelFrame(self.DocSearch_tab, text="Doc Preview", font=('Courier', 10))
-        self.DocTextFrame .pack(side=tk.TOP, expand=tk.NO)
-        self.DocText = tk.Text(self.DocTextFrame, height = 34) 
+        self.DocTextFrame.pack(side=tk.TOP, expand=tk.YES, fill = tk.BOTH)
+        self.DocText = tk.Text(self.DocTextFrame, height = 20) 
         DocText_sbarV = Scrollbar(self.DocTextFrame, orient=tk.VERTICAL)
         DocText_sbarH = Scrollbar(self.DocTextFrame, orient=tk.HORIZONTAL)
         DocText_sbarV.config(command=self.DocText.yview)
@@ -177,7 +175,7 @@ class SearchDocs():
         self.DocText.config(xscrollcommand=DocText_sbarH.set)
         DocText_sbarV.pack(side=tk.RIGHT, fill=tk.Y)
         DocText_sbarH.pack(side=tk.BOTTOM, fill=tk.X)
-        self.DocText.pack(side=tk.LEFT, expand=tk.NO)
+        self.DocText.pack(side=tk.TOP, expand=tk.YES, fill = tk.BOTH)
               
 
 if __name__ == '__main__':

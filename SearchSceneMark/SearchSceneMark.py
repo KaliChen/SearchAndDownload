@@ -20,11 +20,13 @@ class SearchSceneMark():
         self.parent = master
 
         self.ADDRESS = tk.StringVar()
-        self.ADDRESS.set('192.168.43.234')        
+        self.ADDRESS.set('')        
         self.USER = tk.StringVar()
         self.USER.set('pi')
         self.PASSWD = tk.StringVar()
         self.PASSWD.set('raspberry')
+        self.Path = tk.StringVar()
+        self.Path.set('/')  
         self.SearchSceneMarkPanel = tk.LabelFrame(self.parent, text="Search SceneMark",font=('Courier', 10))
         self.SearchSceneMarkPanel.pack(side=tk.LEFT, expand=tk.YES, fill = tk.BOTH) 
         self.init_ctrlPanel()
@@ -43,6 +45,8 @@ class SearchSceneMark():
         tk.Label(self.ctrlPanel, text='Password', font=('Courier', 10),width=8, height=2).grid(row = 0, column = 4, sticky = tk.E+tk.W)
         self.Passwd = tk.Entry(self.ctrlPanel, textvariable=self.PASSWD, show = "*", width = 12,font=('Courier', 10))
         self.Passwd.grid(row = 0, column = 5, sticky = tk.E+tk.W)
+
+
         self.ConfButton = tk.Button(self.ctrlPanel, text = "Config",font=('Courier', 10), command= self.Config)
         self.ConfButton.grid(row = 1, column = 2, sticky = tk.E+tk.W)    
         #43)
@@ -52,10 +56,11 @@ class SearchSceneMark():
         self.ssh_closeButton =tk.Button(self.ctrlPanel, text = "ssh_close",font=('Courier', 10), command = self.ssh_close)
         self.ssh_closeButton.grid(row = 1, column = 4, sticky = tk.E+tk.W)
 
+        """
         self.DevVerType = ttk.Combobox(self.ctrlPanel,font=('Courier', 10),width = 12, values = ["0.2.0", "0.2.1", "0.5.1"], state = "readonly") 
         self.DevVerType.grid(row = 1, column = 5, sticky = tk.E+tk.W)
         self.DevVerType.current(0)
-
+        """
     def ssh_login(self, event = None):
         self.ssh = SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
@@ -81,17 +86,12 @@ class SearchSceneMark():
     #download ALL
     def DownloadSceneMarkAll(self, event = None):
         rawcommand = 'find {path} -name {pattern}'
-        if self.DevVerType.get() == "0.2.0":
-            command = rawcommand.format(path="/home/pi/nice-reference-device_0.2.0", pattern='*.jpg')
-        elif self.DevVerType.get() == "0.2.1":
-            command = rawcommand.format(path="/home/pi/nice-reference-device_0.2.1", pattern='*.jpg')
-        elif self.DevVerType.get() == "0.5.1":
-            command = rawcommand.format(path="/home/pi/nice-reference-device-0.5.1", pattern='*.jpg')              
-        #print(command)
+        command = rawcommand.format(path=self.Path.get(), pattern='*.jpg')
+
         stdin, stdout, stderr = self.ssh.exec_command(command)
         #filelist = stdout.read()#.splitlines()
         filelist = stdout.readlines()
-        #if not os.path.exists("/home/nice/Desktop/nice_device_implement/Tkinter_GUI/sshTest/SceneMark"):
+
         if not os.path.exists(os.getcwd()+"/SceneMark"):
             os.mkdir("SceneMark")
         for afile in filelist:
@@ -112,14 +112,8 @@ class SearchSceneMark():
     """   
     def Search_DeviceSceneMark(self, event = None):
         rawcommand = 'find {path} -name {pattern}'
-        if self.DevVerType.get() == "0.2.0":
-            command = rawcommand.format(path="/home/pi/nice-reference-device_0.2.0", pattern='*.jpg')
-        elif self.DevVerType.get() == "0.2.1":
-            command = rawcommand.format(path="/home/pi/nice-reference-device_0.2.1", pattern='*.jpg')        
-        elif self.DevVerType.get() == "0.5.1":
-            command = rawcommand.format(path="/home/pi/nice-reference-device-0.5.1", pattern='*.jpg')  
-        #print(command)
-        
+        command = rawcommand.format(path=self.Path.get(), pattern='*.jpg')
+
         stdin, stdout, stderr = self.ssh.exec_command(command)
         #filelist = stdout.read()#.splitlines()
         filelist = stdout.readlines()
@@ -148,14 +142,16 @@ class SearchSceneMark():
     def init_getSceneMark_tab(self):
         self.SceneMark_tab = tk.Frame(self.SearchSceneMarkPanel)
         self.SceneMark_tab.pack(side = tk.LEFT, expand=tk.YES, fill=tk.BOTH)
-        #self.notebook.add(self.SceneMark_tab, text="SceneMark")
-        #self.init_imageviewer()
-        
+      
         self.SceneMarkPanel = tk.LabelFrame(self.SceneMark_tab, text = "SceneMark Control Panel",font=('Courier', 10))
         self.SceneMarkPanel.pack(side = tk.TOP, expand = tk.NO, fill = tk.BOTH)
+
+        tk.Label(self.SceneMarkPanel, text='Path', font=('Courier', 10),width=8, height=2).pack(side=tk.LEFT, expand=tk.NO, fill = tk.BOTH)
+        self.UpPath = tk.Entry(self.SceneMarkPanel, textvariable=self.Path,font=('Courier', 10))
+        self.UpPath.pack(side=tk.LEFT, expand=tk.NO, fill = tk.BOTH)
         
-        #self.get_SceneMarkButton =tk.Button(self.SceneMarkPanel , text = "Download All",font=('Courier', 7), command = self.DownloadSceneMarkAll)
-        #self.get_SceneMarkButton.pack(side=tk.LEFT, expand=tk.NO, fill = tk.BOTH)
+        self.get_SceneMarkButton =tk.Button(self.SceneMarkPanel , text = "Download All",font=('Courier', 10), command = self.DownloadSceneMarkAll)
+        self.get_SceneMarkButton.pack(side=tk.LEFT, expand=tk.NO, fill = tk.BOTH)
 
         self.searchSceneMarkButton =tk.Button(self.SceneMarkPanel , text = "Search SceneMark",font=('Courier', 10), command = self.Search_DeviceSceneMark)
         self.searchSceneMarkButton.pack(side=tk.LEFT, expand=tk.NO, fill = tk.BOTH)
@@ -166,11 +162,11 @@ class SearchSceneMark():
         #self.DisplaySceneMarkInfo_ClearBT=tk.Button(self.SceneMarkPanel , text = "CLEAR",font=('Courier', 10), command = self.DisplaySceneMarkInfo_Clear)
         #self.DisplaySceneMarkInfo_ClearBT.pack(side=tk.LEFT, expand=tk.NO, fill = tk.BOTH)
 
-        self.Table_of_get_SceneMark = ttk.Treeview(self.SceneMark_tab,columns = ["#1"],height = 14)
+        self.Table_of_get_SceneMark = ttk.Treeview(self.SceneMark_tab,columns = ["#1"],height = 30)
         self.Table_of_get_SceneMark.heading("#0", text = "Search of SceneMark", )#icon column
         self.Table_of_get_SceneMark.heading("#1", text = "Path")
-        self.Table_of_get_SceneMark.column("#0", width = 200)#icon column
-        self.Table_of_get_SceneMark.column("#1", width = 475)
+        self.Table_of_get_SceneMark.column("#0", width = 320)#icon column
+        self.Table_of_get_SceneMark.column("#1", width = 820)
         self.Table_of_get_SceneMark.tag_configure('T', font = 'Courier,4')
         self.Table_of_get_SceneMark.bind("<Double-1>",self.SelectSceneMark)
         self.Table_of_get_SceneMark.pack(side=tk.TOP, expand=tk.NO, fill = tk.Y)  
