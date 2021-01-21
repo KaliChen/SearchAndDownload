@@ -10,7 +10,7 @@ from tkinter import messagebox as msg
 from tkinter.ttk import Notebook
 from tkinter import filedialog
 from tkinter import ttk
-from tkinter.colorchooser import *
+#from tkinter.colorchooser import *
 
 import tkinter.messagebox as tkmsg
 import tkinter.filedialog as tkfd

@@ -10,8 +10,8 @@ from tkinter import messagebox as msg
 from tkinter.ttk import Notebook
 from tkinter import filedialog
 from tkinter import ttk
-from tkinter.colorchooser import *
-from PIL import Image, ImageTk, ImageDraw, ExifTags, ImageColor,ImageFont
+#from tkinter.colorchooser import *
+#from PIL import Image, ImageTk, ImageDraw, ExifTags, ImageColor,ImageFont
 import tkinter.messagebox as tkmsg
 import tkinter.filedialog as tkfd
 
@@ -22,9 +22,9 @@ class SearchSceneMark():
         self.ADDRESS = tk.StringVar()
         self.ADDRESS.set('')        
         self.USER = tk.StringVar()
-        self.USER.set('pi')
+        self.USER.set('')
         self.PASSWD = tk.StringVar()
-        self.PASSWD.set('raspberry')
+        self.PASSWD.set('')
         self.Path = tk.StringVar()
         self.Path.set('/')  
         self.SearchSceneMarkPanel = tk.LabelFrame(self.parent, text="Search SceneMark",font=('Courier', 10))
